@@ -32,15 +32,21 @@ export default {
   speech (text, lang) {
     return new Promise((resolve, reject) => {
       const parsedLang = (lang || 'pt-BR').replace('_', '-').toLowerCase()
-      // Uso da API não-oficial do Google Translate para TTS (usada largamente como fallback gratuito)
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${parsedLang}&client=tw-ob&q=${encodeURIComponent(text)}`
-      
-      const audio = new Audio(url)
-      
+      // URL mais estável da API não-oficial (client=gtx costuma ignorar bloqueios de CORS)
+      const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${parsedLang}&q=${encodeURIComponent(text)}`
+
+      const audio = document.createElement('audio')
+      audio.src = url
+      audio.style.display = 'none'
+      document.body.appendChild(audio)
+
       let resolved = false
       const forceResolve = () => {
         if (!resolved) {
           resolved = true
+          if (audio.parentNode) {
+            audio.parentNode.removeChild(audio)
+          }
           resolve()
         }
       }
@@ -48,14 +54,16 @@ export default {
       audio.onended = forceResolve
       audio.onerror = (e) => {
         console.error('Google TTS error:', e)
-        // Fallback to native SpeechSynthesis if network fails
         fallbackNativeSpeech(text, parsedLang, forceResolve)
       }
 
-      audio.play().catch(err => {
-        console.error('Falha ao reproduzir Google TTS:', err)
-        fallbackNativeSpeech(text, parsedLang, forceResolve)
-      })
+      const playPromise = audio.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.error('Falha ao reproduzir Google TTS:', err)
+          fallbackNativeSpeech(text, parsedLang, forceResolve)
+        })
+      }
 
       // Timeout geral de segurança para avançar a fila
       setTimeout(forceResolve, 6000)

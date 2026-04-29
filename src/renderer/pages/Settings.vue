@@ -3,7 +3,7 @@
     <div class="columns is-mobile">
       <div class="column is-2-desktop is-3-tablet is-3-mobile">
         <aside class="menu">
-          <img src="static/images/logo.png">
+          <img :src="config.customLogo || 'static/images/logo.png'">
 
           <hr>
 
@@ -37,6 +37,11 @@
             <li>
               <a @click="showTab('sound')" :class="{ 'is-active': (tab==='sound') }">
                 {{ 'menu.sound'|trans }}
+              </a>
+            </li>
+            <li>
+              <a @click="showTab('video')" :class="{ 'is-active': (tab==='video') }">
+                Vídeo / TV
               </a>
             </li>
           </ul>
@@ -111,6 +116,42 @@
             </div>
           </div>
 
+          <h3 class="title">Logo Personalizada</h3>
+          <div class="columns">
+            <div class="column">
+              <div class="field">
+                <label class="label">Escolha uma imagem do seu computador</label>
+                <div class="control">
+                  <div class="file has-name is-info is-medium">
+                    <label class="file-label">
+                      <input class="file-input" type="file" accept="image/*" @change="onLogoSelected">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fa fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Procurar imagem...
+                        </span>
+                      </span>
+                      <span class="file-name">
+                        {{ config.customLogo ? 'Logo_Ativa.png' : 'Nenhum arquivo' }}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <p class="help">A imagem será salva no próprio navegador e substituirá o logo padrão.</p>
+                <div v-if="config.customLogo" style="margin-top: 1rem; border: 2px dashed #dbdbdb; padding: 1rem; border-radius: 8px; text-align: center; max-width: 300px;">
+                  <img :src="config.customLogo" style="max-height: 120px; border-radius: 5px;">
+                  <br>
+                  <button type="button" class="button is-danger is-outlined is-small" @click="config.customLogo = null" style="margin-top: 1rem;">
+                    <span class="icon is-small"><i class="fa fa-trash"></i></span>
+                    <span>Remover Logo</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <h3 class="title">{{ 'settings.interface.colors'| trans }}</h3>
 
           <div class="columns">
@@ -120,7 +161,7 @@
                   {{ 'settings.label.page_bg_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.pageBgColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.pageBgColorNormal">
                 </div>
               </div>
             </div>
@@ -130,7 +171,7 @@
                   {{ 'settings.label.page_font_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.pageFontColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.pageFontColorNormal">
                 </div>
               </div>
             </div>
@@ -140,7 +181,7 @@
                   {{ 'settings.label.page_bg_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.pageBgColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.pageBgColorPriority">
                 </div>
               </div>
             </div>
@@ -150,7 +191,7 @@
                   {{ 'settings.label.page_font_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.pageFontColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.pageFontColorPriority">
                 </div>
               </div>
             </div>
@@ -163,7 +204,7 @@
                   {{ 'settings.label.featured_font_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.featuredFontColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.featuredFontColorNormal">
                 </div>
               </div>
             </div>
@@ -173,7 +214,7 @@
                   {{ 'settings.label.featured_font_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.featuredFontColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.featuredFontColorPriority">
                 </div>
               </div>
             </div>
@@ -183,7 +224,7 @@
                   {{ 'settings.label.history_font_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.historyFontColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.historyFontColorNormal">
                 </div>
               </div>
             </div>
@@ -193,7 +234,7 @@
                   {{ 'settings.label.history_font_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.historyFontColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.historyFontColorPriority">
                 </div>
               </div>
             </div>
@@ -206,7 +247,7 @@
                   {{ 'settings.label.sidebar_bg_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.sidebarBgColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.sidebarBgColorNormal">
                 </div>
               </div>
             </div>
@@ -216,7 +257,7 @@
                   {{ 'settings.label.sidebar_font_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.sidebarFontColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.sidebarFontColorNormal">
                 </div>
               </div>
             </div>
@@ -226,7 +267,7 @@
                   {{ 'settings.label.sidebar_bg_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.sidebarBgColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.sidebarBgColorPriority">
                 </div>
               </div>
             </div>
@@ -236,7 +277,7 @@
                   {{ 'settings.label.sidebar_font_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.sidebarFontColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.sidebarFontColorPriority">
                 </div>
               </div>
             </div>
@@ -249,7 +290,7 @@
                   {{ 'settings.label.footer_bg_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.footerBgColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.footerBgColorNormal">
                 </div>
               </div>
             </div>
@@ -259,7 +300,7 @@
                   {{ 'settings.label.footer_font_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.footerFontColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.footerFontColorNormal">
                 </div>
               </div>
             </div>
@@ -269,7 +310,7 @@
                   {{ 'settings.label.footer_bg_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.footerBgColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.footerBgColorPriority">
                 </div>
               </div>
             </div>
@@ -279,7 +320,7 @@
                   {{ 'settings.label.footer_font_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.footerFontColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.footerFontColorPriority">
                 </div>
               </div>
             </div>
@@ -292,7 +333,7 @@
                   {{ 'settings.label.clock_bg_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.clockBgColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.clockBgColorNormal">
                 </div>
               </div>
             </div>
@@ -302,7 +343,7 @@
                   {{ 'settings.label.clock_font_color_normal'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.clockFontColorNormal">
+                  <input class="input is-medium" type="color" v-model="config.clockFontColorNormal">
                 </div>
               </div>
             </div>
@@ -312,7 +353,7 @@
                   {{ 'settings.label.clock_bg_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.clockBgColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.clockBgColorPriority">
                 </div>
               </div>
             </div>
@@ -322,7 +363,7 @@
                   {{ 'settings.label.clock_font_color_priority'|trans }}
                 </label>
                 <div class="control">
-                  <input class="input is-medium" type="text" placeholder="#000000" v-model="config.clockFontColorPriority">
+                  <input class="input is-medium" type="color" v-model="config.clockFontColorPriority">
                 </div>
               </div>
             </div>
@@ -504,6 +545,53 @@
             </div>
           </div>
         </form>
+
+        <form @submit.prevent="save" v-if="tab==='video'">
+          <div class="field">
+            <label class="label">Fila de Vídeos/Playlists do YouTube</label>
+            <div v-for="(item, index) in config.youtubeUrls" :key="index" class="field has-addons">
+              <div class="control is-expanded">
+                <input class="input is-medium" type="text" placeholder="Cole o link do vídeo ou playlist do YouTube" v-model="item.url" @change="parseYoutubeUrls">
+              </div>
+              <div class="control">
+                <a class="button is-danger is-medium" @click="removeYoutubeUrl(index)" title="Remover">
+                  <span class="icon is-small"><i class="fa fa-trash"></i></span>
+                </a>
+              </div>
+            </div>
+            <div class="control" style="margin-top: 1rem; margin-bottom: 1rem;">
+              <button type="button" class="button is-info is-small" @click="addYoutubeUrl">
+                <span class="icon is-small"><i class="fa fa-plus"></i></span>
+                <span>Adicionar Novo Link</span>
+              </button>
+            </div>
+            <p class="help">O painel tocará os links em ordem. Se for uma playlist, ele tocará a playlist inteira.</p>
+          </div>
+          <div class="field">
+            <label class="label">Volume do Vídeo ({{ config.youtubeVolume }}%)</label>
+            <div class="control">
+              <input type="range" min="0" max="100" v-model="config.youtubeVolume" style="width: 100%;">
+            </div>
+            <p class="help">Se o volume for maior que zero, <strong>você precisará clicar na tela do painel uma vez</strong> após abri-la para que o navegador permita a reprodução com som.</p>
+          </div>
+          <div class="field">
+            <label class="checkbox">
+              <input type="checkbox" v-model="config.youtubeControls">
+              Exibir barra de progresso/controles do YouTube
+            </label>
+          </div>
+          <hr>
+          <div class="field is-grouped is-grouped-right">
+            <div class="control">
+              <button type="submit" class="button is-primary is-large">
+                {{ 'settings.btn.save'|trans }} &nbsp;
+                <span class="icon is-small">
+                  <i class="fa fa-save"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -515,36 +603,51 @@
   import { log } from '@/util/functions'
 
   function load (ctx, isInit) {
-    ctx.config = JSON.parse(JSON.stringify(ctx.$store.state.config))
+    const config = JSON.parse(JSON.stringify(ctx.$store.state.config))
     // defaults
-    ctx.config.locale = ctx.config.locale || 'en'
-    ctx.config.retries = ctx.config.retries || 5
-    ctx.config.theme = ctx.config.theme || ctx.themes[0].id
-    ctx.config.themeOptions = ctx.config.themeOptions || {}
-    ctx.config.services = ctx.config.services || []
-    ctx.config.alert = ctx.config.alert || audio.alertsAvailable.Default
-    ctx.config.speech = !!ctx.config.speech
+    config.locale = config.locale || 'en'
+    config.retries = config.retries || 5
+    config.theme = config.theme || ctx.themes[0].id
+    config.themeOptions = config.themeOptions || {}
+    config.customLogo = config.customLogo || null
+    config.services = config.services || []
+    config.alert = config.alert || audio.alertsAvailable.Default
+    config.speech = !!config.speech
 
-    ctx.config.pageBgColorNormal = ctx.config.pageBgColorNormal || '#FFFFFF'
-    ctx.config.pageFontColorNormal = ctx.config.pageFontColorNormal || '#000000'
-    ctx.config.pageBgColorPriority = ctx.config.pageBgColorPriority || '#FFFFFF'
-    ctx.config.pageFontColorPriority = ctx.config.pageFontColorPriority || '#FF0000'
-    ctx.config.featuredFontColorNormal = ctx.config.featuredFontColorNormal || '#000000'
-    ctx.config.featuredFontColorPriority = ctx.config.featuredFontColorPriority || '#FF0000'
-    ctx.config.historyFontColorNormal = ctx.config.historyFontColorNormal || '#000000'
-    ctx.config.historyFontColorPriority = ctx.config.historyFontColorPriority || '#FF0000'
-    ctx.config.sidebarBgColorNormal = ctx.config.sidebarBgColorNormal || '#4FC08D'
-    ctx.config.sidebarFontColorNormal = ctx.config.sidebarFontColorNormal || '#000000'
-    ctx.config.sidebarBgColorPriority = ctx.config.sidebarBgColorPriority || '#4FC08D'
-    ctx.config.sidebarFontColorPriority = ctx.config.sidebarFontColorPriority || '#000000'
-    ctx.config.footerBgColorNormal = ctx.config.footerBgColorNormal || '#F1F1F1'
-    ctx.config.footerFontColorNormal = ctx.config.footerFontColorNormal || '#000000'
-    ctx.config.footerBgColorPriority = ctx.config.footerBgColorPriority || '#F1F1F1'
-    ctx.config.footerFontColorPriority = ctx.config.footerFontColorPriority || '#000000'
-    ctx.config.clockBgColorNormal = ctx.config.clockBgColorNormal || '#44A075'
-    ctx.config.clockFontColorNormal = ctx.config.clockFontColorNormal || '#000000'
-    ctx.config.clockBgColorPriority = ctx.config.clockBgColorPriority || '#44A075'
-    ctx.config.clockFontColorPriority = ctx.config.clockFontColorPriority || '#000000'
+    config.pageBgColorNormal = config.pageBgColorNormal || '#FFFFFF'
+    config.pageFontColorNormal = config.pageFontColorNormal || '#000000'
+    config.pageBgColorPriority = config.pageBgColorPriority || '#FFFFFF'
+    config.pageFontColorPriority = config.pageFontColorPriority || '#FF0000'
+    config.featuredFontColorNormal = config.featuredFontColorNormal || '#000000'
+    config.featuredFontColorPriority = config.featuredFontColorPriority || '#FF0000'
+    config.historyFontColorNormal = config.historyFontColorNormal || '#000000'
+    config.historyFontColorPriority = config.historyFontColorPriority || '#FF0000'
+    config.sidebarBgColorNormal = config.sidebarBgColorNormal || '#4FC08D'
+    config.sidebarFontColorNormal = config.sidebarFontColorNormal || '#000000'
+    config.sidebarBgColorPriority = config.sidebarBgColorPriority || '#4FC08D'
+    config.sidebarFontColorPriority = config.sidebarFontColorPriority || '#000000'
+    config.footerBgColorNormal = config.footerBgColorNormal || '#F1F1F1'
+    config.footerFontColorNormal = config.footerFontColorNormal || '#000000'
+    config.footerBgColorPriority = config.footerBgColorPriority || '#F1F1F1'
+    config.footerFontColorPriority = config.footerFontColorPriority || '#000000'
+    config.clockBgColorNormal = config.clockBgColorNormal || '#44A075'
+    config.clockFontColorNormal = config.clockFontColorNormal || '#000000'
+    config.clockBgColorPriority = config.clockBgColorPriority || '#44A075'
+    config.clockFontColorPriority = config.clockFontColorPriority || '#000000'
+
+    config.youtubeUrls = config.youtubeUrls || []
+    if (config.youtubeUrls.length === 0) {
+      config.youtubeUrls.push({ url: '', id: null, isPlaylist: false })
+    }
+
+    // Migration from old youtubeMuted
+    if (config.youtubeVolume === undefined) {
+      config.youtubeVolume = config.youtubeMuted === false ? 100 : 0
+    }
+
+    config.youtubeControls = !!config.youtubeControls
+
+    ctx.config = config
 
     if (ctx.$store.getters.isAuthenticated) {
       const forceLoad = (
@@ -627,6 +730,15 @@
         this.fetchUnities = true
         this.fetchServices = false
       },
+      onLogoSelected (event) {
+        const file = event.target.files[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.$set(this.config, 'customLogo', e.target.result)
+        }
+        reader.readAsDataURL(file)
+      },
       loadData () {
         if (this.fetchUnities && this.config.server) {
           this.$store
@@ -644,6 +756,46 @@
       },
       loadServices () {
         this.$store.dispatch('fetchServices', this.config.unity)
+      },
+      addYoutubeUrl () {
+        if (!this.config.youtubeUrls) {
+          this.$set(this.config, 'youtubeUrls', [])
+        }
+        this.config.youtubeUrls.push({ url: '', id: null, isPlaylist: false })
+      },
+      removeYoutubeUrl (index) {
+        this.config.youtubeUrls.splice(index, 1)
+        this.parseYoutubeUrls()
+      },
+      parseYoutubeUrls () {
+        if (!this.config.youtubeUrls) return
+        this.config.youtubeUrls.forEach(item => {
+          if (!item.url) {
+            item.id = null
+            item.isPlaylist = false
+            return
+          }
+          const url = item.url.trim()
+          const listMatch = url.match(/[?&]list=([^&]+)/)
+          if (listMatch) {
+            item.id = listMatch[1]
+            item.isPlaylist = true
+            return
+          }
+          const videoMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/)
+          if (videoMatch) {
+            item.id = videoMatch[1]
+            item.isPlaylist = false
+            return
+          }
+          if (url.length === 11 || url.startsWith('PL')) {
+            item.id = url
+            item.isPlaylist = url.startsWith('PL')
+          } else {
+            item.id = null
+            item.isPlaylist = false
+          }
+        })
       },
       save () {
         this.$store.dispatch('saveConfig', this.config)

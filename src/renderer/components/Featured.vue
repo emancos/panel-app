@@ -1,5 +1,5 @@
 <template>
-  <div class="featured-message">
+  <div class="featured-message" :class="{ 'is-blinking': isBlinking }">
     <p class="description" :style="{ 'color': fontColor }">
       {{ message.description || '---' }}
     </p>
@@ -17,24 +17,6 @@ import Queue from 'promise-queue'
 
 const queue = new Queue(1, 10)
 
-function toggleVisibility (el) {
-  if (el.style.visibility === 'hidden') {
-    el.style.visibility = 'visible'
-  } else {
-    el.style.visibility = 'hidden'
-  }
-}
-
-function blinkElement (el, count, resolve) {
-  toggleVisibility(el)
-
-  if (count > 0) {
-    setTimeout(() => blinkElement(el, count - 1, resolve), 200)
-  } else {
-    setTimeout(() => resolve(), 1000)
-  }
-}
-
 export default {
   name: 'Featured',
   props: {
@@ -47,7 +29,9 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      isBlinking: false
+    }
   },
   mounted () {
     queue.add(this.blink)
@@ -55,8 +39,12 @@ export default {
   methods: {
     blink () {
       this.$emit('blink')
-      return new Promise((resolve, reject) => {
-        blinkElement(this.$el, 5, resolve)
+      return new Promise((resolve) => {
+        this.isBlinking = true
+        setTimeout(() => {
+          this.isBlinking = false
+          resolve()
+        }, 2000) // Pisca durante 2 segundos suavemente
       })
     }
   },
@@ -67,3 +55,19 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+@keyframes pulseBlink
+  0%
+    transform: scale(1)
+    opacity: 1
+  50%
+    transform: scale(1.03)
+    opacity: 0.6
+  100%
+    transform: scale(1)
+    opacity: 1
+
+.is-blinking
+  animation: pulseBlink 0.8s ease-in-out infinite
+</style>

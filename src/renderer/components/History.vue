@@ -1,6 +1,6 @@
 <template>
-  <div class="history">
-    <div v-if="messages.length===0" class="empty">
+  <transition-group name="history-list" tag="div" class="history">
+    <div v-if="messages.length===0" class="empty" key="empty">
       <p :style="{ 'color': fontColorNormal }">
         {{ 'history.empty'|trans }}
       </p>
@@ -16,7 +16,7 @@
         {{ message.description }}
       </span>
     </div>
-  </div>
+  </transition-group>
 </template>
 
 <script>

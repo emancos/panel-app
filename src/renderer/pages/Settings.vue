@@ -798,6 +798,7 @@
         })
       },
       save () {
+        this.parseYoutubeUrls()
         this.$store.dispatch('saveConfig', this.config)
 
         const token = (

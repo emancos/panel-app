@@ -84,11 +84,11 @@
 
         let url = `https://www.youtube.com/embed/`
         if (isList) {
-          url += `videoseries?list=${first.id}&`
+          url += `videoseries?list=${first.id}`
         } else {
-          url += `${first.id}?`
+          url += `${first.id}?rel=0`
         }
-        url += `enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1`
+        url += `&enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1`
 
         if (!isList) {
           const others = validUrls.slice(1).map(u => u.id).filter(id => !id.startsWith('PL'))
@@ -98,6 +98,12 @@
             url += `&playlist=${first.id}`
           }
         }
+
+        const origin = window.location.origin && window.location.origin !== 'null' && window.location.origin !== 'file://' 
+          ? window.location.origin 
+          : 'http://localhost'
+        url += `&origin=${encodeURIComponent(origin)}&widget_referrer=${encodeURIComponent(origin)}`
+        
         return url
       },
       hasVideo () {

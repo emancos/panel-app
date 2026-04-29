@@ -82,7 +82,7 @@
         const mute = vol === 0 ? 1 : 0
         const controls = this.config.youtubeControls ? 1 : 0
 
-        let url = `https://www.youtube.com/embed/`
+        let url = `https://www.youtube-nocookie.com/embed/`
         if (isList) {
           url += `videoseries?list=${first.id}`
         } else {
@@ -99,11 +99,11 @@
           }
         }
 
-        const origin = window.location.origin && window.location.origin !== 'null' && window.location.origin !== 'file://' 
-          ? window.location.origin 
+        const origin = window.location.origin && window.location.origin !== 'null' && window.location.origin !== 'file://'
+          ? window.location.origin
           : 'http://localhost'
         url += `&origin=${encodeURIComponent(origin)}&widget_referrer=${encodeURIComponent(origin)}`
-        
+
         return url
       },
       hasVideo () {

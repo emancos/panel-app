@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, session } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -86,7 +86,18 @@ function createWindow () {
   }
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  // Ignora restrições de Origin/Referer do Youtube para que o embed funcione em ambiente local (file://)
+  const filter = {
+    urls: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*']
+  }
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    details.requestHeaders['Referer'] = 'https://www.youtube.com/'
+    details.requestHeaders['Origin'] = 'https://www.youtube.com/'
+    callback({ cancel: false, requestHeaders: details.requestHeaders })
+  })
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

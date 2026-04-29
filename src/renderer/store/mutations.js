@@ -1,6 +1,6 @@
 import storage from '@/services/storage'
 
-const HISTORY_MAX_LENGTH = 5
+const HISTORY_MAX_LENGTH = 10
 
 function equals (m1, m2) {
   return m1.type === m2.type && m1.title === m2.title

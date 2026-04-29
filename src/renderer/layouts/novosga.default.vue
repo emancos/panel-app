@@ -7,7 +7,7 @@
         </header>
         <footer class="column" :style="{ 'background-color': color('footerBgColor'), 'color': color('footerFontColor') }">
           <img :src="logoUrl" class="is-pulled-left">
-          <h1 class="is-pulled-left" v-if="config.themeOptions.footerText" :style="{ 'color': color('footerFontColor') }">
+          <h1 class="is-pulled-left" v-if="config.themeOptions && config.themeOptions.footerText" :style="{ 'color': color('footerFontColor') }">
             {{ config.themeOptions.footerText }}
           </h1>
         </footer>
@@ -64,7 +64,7 @@
         return this.$store.state.config
       },
       logoUrl () {
-        return this.config.themeOptions.logo || 'static/images/logo.png'
+        return (this.config.themeOptions && this.config.themeOptions.logo) || 'static/images/logo.png'
       }
     },
     methods: {
@@ -80,25 +80,48 @@
         }
         this.isCalling = true
         this.lastMessage = this.messageQueue.shift()
+
+        const startTime = Date.now()
+        const MIN_DELAY = 6000 // 6 seconds
+
+        console.log('Iniciando reprodução de áudio/WAV para:', this.lastMessage.$data.numeroSenha)
+
         audio.playAlert(this.config.alert)
           .then(() => {
+            console.log('Áudio WAV finalizado.')
             if (!this.config.speech) {
+              console.log('Vocalização (speech) está desativada.')
               return Promise.resolve()
             }
+            console.log('Iniciando vocalização...')
             let texts = ['Senha']
-            this.message.$data.siglaSenha.split('').forEach(char => texts.push(char))
-            texts.push(this.message.$data.numeroSenha)
-            texts.push(this.message.$data.local)
-            texts.push(this.message.$data.numeroLocal)
+            this.lastMessage.$data.siglaSenha.split('').forEach(char => texts.push(char))
+            texts.push(this.lastMessage.$data.numeroSenha)
+            texts.push(this.lastMessage.$data.local)
+            texts.push(this.lastMessage.$data.numeroLocal)
             return speech.speechAll(texts, this.config.locale)
           })
           .then(() => {
-            this.isCalling = false
-            this.playAudio()
+            console.log('Fila de áudio concluída com sucesso.')
+            const elapsed = Date.now() - startTime
+            const waitTime = Math.max(0, MIN_DELAY - elapsed)
+            setTimeout(() => {
+              this.isCalling = false
+              this.playAudio()
+            }, waitTime)
+          })
+          .catch(err => {
+            console.error('Falha na cadeia de áudio/voz:', err)
+            const elapsed = Date.now() - startTime
+            const waitTime = Math.max(0, MIN_DELAY - elapsed)
+            setTimeout(() => {
+              this.isCalling = false
+              this.playAudio()
+            }, waitTime)
           })
       },
       color (prefix, fallback) {
-        const peso = this.lastMessage.$data ? this.lastMessage.$data.peso : 0
+        const peso = this.lastMessage && this.lastMessage.$data ? this.lastMessage.$data.peso : 0
         const suffix = peso > 0 ? 'Priority' : 'Normal'
         return this.config[prefix + suffix] || this.config[fallback + suffix]
       }

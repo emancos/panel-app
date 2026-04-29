@@ -15,14 +15,28 @@ function speechQueue (speech, texts, lang, index) {
   })
 }
 
+function fallbackNativeSpeech (text, lang, callback) {
+  const msg = new SpeechSynthesisUtterance()
+  msg.text = text
+  msg.lang = lang
+  msg.onerror = (e) => {
+    console.error('Native Speech error:', e)
+    callback()
+  }
+  msg.onend = callback
+  speechSynthesis.speak(msg)
+}
+
 export default {
 
   speech (text, lang) {
     return new Promise((resolve, reject) => {
-      const msg = new SpeechSynthesisUtterance()
-      msg.text = text
-      msg.lang = (lang || '').replace('_', '-').toLowerCase()
-
+      const parsedLang = (lang || 'pt-BR').replace('_', '-').toLowerCase()
+      // Uso da API não-oficial do Google Translate para TTS (usada largamente como fallback gratuito)
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${parsedLang}&client=tw-ob&q=${encodeURIComponent(text)}`
+      
+      const audio = new Audio(url)
+      
       let resolved = false
       const forceResolve = () => {
         if (!resolved) {
@@ -31,16 +45,20 @@ export default {
         }
       }
 
-      msg.onerror = (e) => {
-        console.error('Speech error:', e)
-        forceResolve() // fallback to continue queue
+      audio.onended = forceResolve
+      audio.onerror = (e) => {
+        console.error('Google TTS error:', e)
+        // Fallback to native SpeechSynthesis if network fails
+        fallbackNativeSpeech(text, parsedLang, forceResolve)
       }
-      msg.onend = forceResolve
 
-      speechSynthesis.speak(msg)
+      audio.play().catch(err => {
+        console.error('Falha ao reproduzir Google TTS:', err)
+        fallbackNativeSpeech(text, parsedLang, forceResolve)
+      })
 
-      // Fallback timeout: se a voz travar e não disparar onend em 5 segundos, forçamos.
-      setTimeout(forceResolve, 5000)
+      // Timeout geral de segurança para avançar a fila
+      setTimeout(forceResolve, 6000)
     })
   },
 

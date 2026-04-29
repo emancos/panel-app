@@ -15,6 +15,10 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+// Fix for SIGSYS / clone3 crashes on modern Linux distributions running older Electron
+app.commandLine.appendSwitch('no-sandbox')
+app.commandLine.appendSwitch('disable-gpu-sandbox')
+
 function createWindow () {
   const fullscreen = process.argv.indexOf('--fullscreen') !== -1
 

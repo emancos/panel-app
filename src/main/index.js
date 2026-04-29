@@ -29,7 +29,8 @@ function createWindow () {
     useContentSize: true,
     fullscreen: fullscreen,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity: false
     }
   })
 
@@ -91,10 +92,10 @@ app.on('ready', () => {
   const filter = {
     urls: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*']
   }
-  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, next) => {
     details.requestHeaders['Referer'] = 'https://www.youtube.com/'
     details.requestHeaders['Origin'] = 'https://www.youtube.com/'
-    callback({ cancel: false, requestHeaders: details.requestHeaders })
+    next({ cancel: false, requestHeaders: details.requestHeaders })
   })
   createWindow()
 })

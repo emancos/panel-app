@@ -99,11 +99,6 @@
           }
         }
 
-        const origin = window.location.origin && window.location.origin !== 'null' && window.location.origin !== 'file://'
-          ? window.location.origin
-          : 'http://localhost'
-        url += `&origin=${encodeURIComponent(origin)}&widget_referrer=${encodeURIComponent(origin)}`
-
         return url
       },
       hasVideo () {

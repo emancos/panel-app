@@ -23,10 +23,24 @@ export default {
       msg.text = text
       msg.lang = (lang || '').replace('_', '-').toLowerCase()
 
-      msg.onerror = reject
-      msg.onend = resolve
+      let resolved = false
+      const forceResolve = () => {
+        if (!resolved) {
+          resolved = true
+          resolve()
+        }
+      }
+
+      msg.onerror = (e) => {
+        console.error('Speech error:', e)
+        forceResolve() // fallback to continue queue
+      }
+      msg.onend = forceResolve
 
       speechSynthesis.speak(msg)
+
+      // Fallback timeout: se a voz travar e não disparar onend em 5 segundos, forçamos.
+      setTimeout(forceResolve, 5000)
     })
   },
 

@@ -1,3 +1,4 @@
+let currentAudio = null
 
 export default {
 
@@ -12,16 +13,33 @@ export default {
     'Quito Mariscal sucre': 'quito-mariscal-sucre.wav',
     'Toy doorbell': 'toydoorbell.wav'
   },
-
   playAlert (filename) {
     return new Promise((resolve, reject) => {
       filename = filename || this.alertsAvailable.Default
 
-      const audio = new Audio()
-      audio.src = `${this.alertPath}/alert/${filename}`
-      audio.onended = resolve
-      audio.onerror = reject
-      audio.play()
+      if (!currentAudio) {
+        currentAudio = new Audio()
+        document.body.appendChild(currentAudio)
+      } else {
+        currentAudio.pause()
+        currentAudio.onended = null
+        currentAudio.onerror = null
+      }
+
+      currentAudio.src = `${this.alertPath}/alert/${filename}`
+      currentAudio.onended = resolve
+      currentAudio.onerror = (e) => {
+        console.error('Erro no áudio:', e)
+        reject(e)
+      }
+
+      const playPromise = currentAudio.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(e => {
+          console.warn('Audio blocked by browser policy ou interrompido:', e)
+          reject(e)
+        })
+      }
     })
   }
 }

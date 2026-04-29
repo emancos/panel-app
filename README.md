@@ -1,26 +1,103 @@
-# Painel Web
+# 🚀 Novo SGA - Painel Web Modernizado
 
-Este repositório possui o código do Painel de exibição de senhas do [NovoSGA](http://github.com/novosga/novosga), podendo utilizar-se dos releases disponíveis ou editar o código e personalizá-lo caso queira.
+![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Electron](https://img.shields.io/badge/Electron-7.2.4-47848F.svg)
+![Vue](https://img.shields.io/badge/Vue-2.7-4FC08D.svg)
 
-Caso possua alguma sugestão de melhoria, fique a vontade de criar um pull request!
+Uma versão modernizada, elegante e robusta do Painel Web para o ecossistema **Novo SGA**. Esta versão foi otimizada para oferecer uma experiência visual premium, suporte a conteúdos multimídia e alta compatibilidade em ambientes Linux e Docker.
 
-----
+---
 
-This repository has the code of panel of [NovoSGA](http://github.com/novosga/novosga), you can use the available releases or edit the code and customize it if you want.
+## ✨ Principais Funcionalidades
 
-If you have any suggestions for improvement, feel free to create a pull request!
+*   **🎨 Layout Híbrido & Moderno**: Interface redesenhada com tipografia *Outfit*, efeitos de *glassmorphism* e animações suaves.
+*   **📺 Integração com YouTube**: Suporte nativo para vídeos individuais ou playlists completas como plano de fundo.
+*   **🎙️ Vocalização Avançada (TTS)**: Integração com a API do Google Translate para chamadas de senha claras e confiáveis, com fallback para voz nativa do sistema.
+*   **🖼️ Logo Personalizada**: Upload direto via painel de configurações com persistência local (Base64).
+*   **🔊 Controle de Áudio Inteligente**: Gestão de volume exclusiva para o vídeo, com pausa automática durante a chamada de senhas.
+*   **🐳 Docker Ready**: Dockerfile otimizado para implantação rápida via Nginx.
+*   **🐧 Linux Optimized**: Correções integradas para drivers de vídeo e sandbox no Electron em distros modernas (Ubuntu 22+, Debian, etc).
 
-----
+---
 
-## Build Setup
+## 🚀 Como Começar
 
-``` bash
-# install dependencies
+### Pré-requisitos
+*   Node.js (recomendado v12 ou v16 para compatibilidade de build)
+*   npm
+
+### Instalação
+```bash
+# Clone o repositório
+git clone https://github.com/emancos/panel-app.git
+
+# Entre na pasta
+cd panel-app
+
+# Instale as dependências
 npm install
+```
 
-# serve with hot reload at localhost:8080
+### Modos de Execução
+
+#### 🛠️ Desenvolvimento
+```bash
 npm run dev
+```
 
-# build for production with minification
+#### 🌐 Versão Web (Produção)
+Gera os arquivos estáticos na pasta `dist/web`.
+```bash
+npm run build:web
+```
+
+#### 📦 Versão Desktop (Electron)
+Gera o AppImage/Executável na pasta `build`.
+```bash
 npm run build
 ```
+
+---
+
+## 🐳 Docker
+
+Para rodar o painel de forma rápida e isolada usando Docker:
+
+```bash
+# Construir a imagem
+docker build -t novosga-painel .
+
+# Rodar o container na porta 8080
+docker run -d -p 8080:80 --name painel-web novosga-painel
+```
+Acesse em: `http://localhost:8080`
+
+---
+
+## ⚙️ Configurações Importantes
+
+### YouTube no Electron
+Se o player do YouTube exibir "Erro de configuração" ou "Assistir no YouTube", certifique-se de que o aplicativo foi compilado com as correções de **Spoofing de Headers** presentes nesta versão, que permitem o funcionamento do embed sob o protocolo `file://`.
+
+### Vocalização
+Para que a voz funcione, o painel precisa de acesso à internet (para o Google TTS). Caso esteja offline, ele tentará usar as vozes instaladas no sistema operacional.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+*   **Vue.js 2.7** - Framework principal
+*   **Vuex** - Gestão de estado
+*   **Electron** - Distribuição desktop
+*   **Bulma** - Framework CSS
+*   **Sass** - Pré-processador CSS
+*   **Google Translate API** - Engine de TTS
+
+---
+
+## 📄 Licença
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+Desenvolvido com ❤️ para a comunidade **Novo SGA**.

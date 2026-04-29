@@ -48,7 +48,18 @@ let rendererConfig = {
       },
       {
         test: /\.sass$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                indentedSyntax: true
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.less$/,
@@ -78,7 +89,18 @@ let rendererConfig = {
           options: {
             extractCSS: process.env.NODE_ENV === 'production',
             loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
+              sass: [
+                'vue-style-loader',
+                'css-loader',
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    sassOptions: {
+                      indentedSyntax: true
+                    }
+                  }
+                }
+              ],
               scss: 'vue-style-loader!css-loader!sass-loader',
               less: 'vue-style-loader!css-loader!less-loader'
             }

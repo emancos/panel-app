@@ -35,7 +35,18 @@ let webConfig = {
       },
       {
         test: /\.sass$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                indentedSyntax: true
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.less$/,
@@ -62,7 +73,18 @@ let webConfig = {
           options: {
             extractCSS: true,
             loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
+              sass: [
+                'vue-style-loader',
+                'css-loader',
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    sassOptions: {
+                      indentedSyntax: true
+                    }
+                  }
+                }
+              ],
               scss: 'vue-style-loader!css-loader!sass-loader',
               less: 'vue-style-loader!css-loader!less-loader'
             }
@@ -108,7 +130,14 @@ let webConfig = {
       'process.env.IS_WEB': 'true'
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '../static'),
+        to: path.join(__dirname, '../dist/web/static'),
+        ignore: ['.*']
+      }
+    ])
   ],
   output: {
     filename: '[name].js',
@@ -132,13 +161,6 @@ if (process.env.NODE_ENV === 'production') {
 
   webConfig.plugins.push(
     new MinifyPlugin(),
-    new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/web/static'),
-        ignore: ['.*']
-      }
-    ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),

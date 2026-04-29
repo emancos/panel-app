@@ -49,6 +49,9 @@ export default {
   data () {
     return {}
   },
+  mounted () {
+    queue.add(this.blink)
+  },
   methods: {
     blink () {
       this.$emit('blink')

@@ -1,4 +1,5 @@
 <script>
+  import { h } from 'vue'
   import auth from '@/store/modules/auth'
   import { log } from '@/util/functions'
 
@@ -138,13 +139,17 @@
   export default {
     name: 'Layout',
 
-    render (h) {
+    render () {
       let view
+      const theme = this.$store.getters.theme
+      console.log(`Loading layout for theme: ${theme}`)
       try {
-        const theme = this.$store.getters.theme
-        view = require(`@/layouts/${theme}`).default
+        const mod = require(`@/layouts/${theme}.vue`)
+        view = mod.default || mod
       } catch (e) {
-        view = require('@/layouts/novosga.default').default
+        console.warn(`Could not load layout for theme ${theme}, falling back to novosga.default. Error:`, e)
+        const mod = require('@/layouts/novosga.default.vue')
+        view = mod.default || mod
       }
       return h(view)
     },
@@ -153,7 +158,7 @@
       connect(this, this.$store)
     },
 
-    beforeDestroy () {
+    beforeUnmount () {
       running = false
       disconnect()
       clearTimeout(timeoutId)

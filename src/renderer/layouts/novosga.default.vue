@@ -19,7 +19,7 @@
       <div class="column is-one-quarter history-column" :style="{ 'background-color': color('sidebarBgColor'), 'color': color('sidebarFontColor') }">
         <header>
           <h2 class="title" :style="{ 'color': color('sidebarFontColor') }">
-            {{ 'history.title'|trans }}
+            {{ $trans('history.title') }}
           </h2>
           <history
             v-if="lastMessage"
@@ -29,7 +29,7 @@
           </history>
         </header>
         <footer :style="{ 'background-color': color('clockBgColor'), 'color': color('clockFontColor') }">
-          <clock :locale="config.locale" :dateFormat="'date_format'|trans" :fontColor="color('clockFontColor')"></clock>
+          <clock :locale="config.locale" :dateFormat="$trans('date_format')" :fontColor="color('clockFontColor')"></clock>
         </footer>
       </div>
     </div>
@@ -88,7 +88,7 @@
         } else {
           url += `${first.id}?rel=0`
         }
-        url += `&enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1`
+        url += `&enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1&origin=http://127.0.0.1:9080`
 
         if (!isList) {
           const others = validUrls.slice(1).map(u => u.id).filter(id => !id.startsWith('PL'))
@@ -217,7 +217,7 @@
 </script>
 
 <style lang="sass">
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap')
+  @import "https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap"
 
   .novosga-default
     font-family: 'Outfit', sans-serif

@@ -11,32 +11,32 @@
             <span class="icon">
               <i class="fa fa-chevron-left"></i>
             </span>
-            {{ 'menu.go_back'|trans }}
+            {{ $trans('menu.go_back') }}
           </router-link>
 
           <p class="menu-label">
-            {{ 'menu.general'|trans }}
+            {{ $trans('menu.general') }}
           </p>
 
           <ul class="menu-list">
             <li>
               <a @click="showTab('interface')" :class="{ 'is-active': (tab==='interface') }">
-                {{ 'menu.interface'|trans }}
+                {{ $trans('menu.interface') }}
               </a>
             </li>
             <li>
               <a @click="showTab('server')" :class="{ 'is-active': (tab==='server') }">
-                {{ 'menu.server'|trans }}
+                {{ $trans('menu.server') }}
               </a>
             </li>
             <li>
               <a @click="showTab('services')" :class="{ 'is-active': (tab==='services') }" v-if="unities.length">
-                {{ 'menu.services'|trans }}
+                {{ $trans('menu.services') }}
               </a>
             </li>
             <li>
               <a @click="showTab('sound')" :class="{ 'is-active': (tab==='sound') }">
-                {{ 'menu.sound'|trans }}
+                {{ $trans('menu.sound') }}
               </a>
             </li>
             <li>
@@ -50,10 +50,10 @@
       <div class="column is-10-desktop is-9-tablet is-9-mobile">
         <div class="heading">
           <h1 class="title">
-            {{ 'settings.title'|trans }}
+            {{ $trans('settings.title') }}
           </h1>
           <h2 class="subtitle">
-            {{ 'settings.subtitle'|trans }}
+            {{ $trans('settings.subtitle') }}
           </h2>
         </div>
 
@@ -64,7 +64,7 @@
             <div class="column is-4">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.locale'|trans }}
+                  {{ $trans('settings.label.locale') }}
                 </label>
                 <div class="control is-expanded has-icons-left">
                   <span class="select is-fullwidth">
@@ -83,7 +83,7 @@
             <div class="column is-4">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.theme'|trans }}
+                  {{ $trans('settings.label.theme') }}
                 </label>
                 <div class="control is-expanded has-icons-left">
                   <span class="select is-fullwidth">
@@ -101,7 +101,7 @@
             </div>
           </div>
 
-          <h3 class="title" v-if="selectedTheme && selectedTheme.options.length">{{ 'settings.interface.theme_options'| trans }}</h3>
+          <h3 class="title" v-if="selectedTheme && selectedTheme.options.length">{{ $trans('settings.interface.theme_options') }}</h3>
 
           <div class="columns" v-if="selectedTheme && selectedTheme.options.length">
             <div class="column">
@@ -152,13 +152,13 @@
             </div>
           </div>
 
-          <h3 class="title">{{ 'settings.interface.colors'| trans }}</h3>
+          <h3 class="title">{{ $trans('settings.interface.colors') }}</h3>
 
           <div class="columns">
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.page_bg_color_normal'|trans }}
+                  {{ $trans('settings.label.page_bg_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.pageBgColorNormal">
@@ -168,7 +168,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.page_font_color_normal'|trans }}
+                  {{ $trans('settings.label.page_font_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.pageFontColorNormal">
@@ -178,7 +178,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.page_bg_color_priority'|trans }}
+                  {{ $trans('settings.label.page_bg_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.pageBgColorPriority">
@@ -188,7 +188,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.page_font_color_priority'|trans }}
+                  {{ $trans('settings.label.page_font_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.pageFontColorPriority">
@@ -201,7 +201,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.featured_font_color_normal'|trans }}
+                  {{ $trans('settings.label.featured_font_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.featuredFontColorNormal">
@@ -211,7 +211,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.featured_font_color_priority'|trans }}
+                  {{ $trans('settings.label.featured_font_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.featuredFontColorPriority">
@@ -221,7 +221,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.history_font_color_normal'|trans }}
+                  {{ $trans('settings.label.history_font_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.historyFontColorNormal">
@@ -231,7 +231,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.history_font_color_priority'|trans }}
+                  {{ $trans('settings.label.history_font_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.historyFontColorPriority">
@@ -244,7 +244,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.sidebar_bg_color_normal'|trans }}
+                  {{ $trans('settings.label.sidebar_bg_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.sidebarBgColorNormal">
@@ -254,7 +254,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.sidebar_font_color_normal'|trans }}
+                  {{ $trans('settings.label.sidebar_font_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.sidebarFontColorNormal">
@@ -264,7 +264,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.sidebar_bg_color_priority'|trans }}
+                  {{ $trans('settings.label.sidebar_bg_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.sidebarBgColorPriority">
@@ -274,7 +274,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.sidebar_font_color_priority'|trans }}
+                  {{ $trans('settings.label.sidebar_font_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.sidebarFontColorPriority">
@@ -287,7 +287,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.footer_bg_color_normal'|trans }}
+                  {{ $trans('settings.label.footer_bg_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.footerBgColorNormal">
@@ -297,7 +297,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.footer_font_color_normal'|trans }}
+                  {{ $trans('settings.label.footer_font_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.footerFontColorNormal">
@@ -307,7 +307,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.footer_bg_color_priority'|trans }}
+                  {{ $trans('settings.label.footer_bg_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.footerBgColorPriority">
@@ -317,7 +317,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.footer_font_color_priority'|trans }}
+                  {{ $trans('settings.label.footer_font_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.footerFontColorPriority">
@@ -330,7 +330,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.clock_bg_color_normal'|trans }}
+                  {{ $trans('settings.label.clock_bg_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.clockBgColorNormal">
@@ -340,7 +340,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.clock_font_color_normal'|trans }}
+                  {{ $trans('settings.label.clock_font_color_normal') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.clockFontColorNormal">
@@ -350,7 +350,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.clock_bg_color_priority'|trans }}
+                  {{ $trans('settings.label.clock_bg_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.clockBgColorPriority">
@@ -360,7 +360,7 @@
             <div class="column">
               <div class="field">
                 <label class="label">
-                  {{ 'settings.label.clock_font_color_priority'|trans }}
+                  {{ $trans('settings.label.clock_font_color_priority') }}
                 </label>
                 <div class="control">
                   <input class="input is-medium" type="color" v-model="config.clockFontColorPriority">
@@ -374,7 +374,7 @@
           <div class="field is-grouped is-grouped-right">
             <div class="control">
               <button type="submit" class="button is-primary is-large">
-                {{ 'settings.btn.save'|trans }} &nbsp;
+                {{ $trans('settings.btn.save') }} &nbsp;
                 <span class="icon is-small">
                   <i class="fa fa-save"></i>
                 </span>
@@ -386,7 +386,7 @@
         <form @submit.prevent="save" v-if="tab==='server'">
           <div class="field">
             <label class="label">
-              {{ 'settings.label.server'|trans }}
+              {{ $trans('settings.label.server') }}
             </label>
             <div class="control">
               <input class="input is-medium" type="url" placeholder="https://" v-model="config.server" @change="changeServer">
@@ -395,7 +395,7 @@
 
           <div class="field">
             <label class="label">
-              {{ 'settings.label.username'|trans }}
+              {{ $trans('settings.label.username') }}
             </label>
             <div class="control">
               <input class="input is-medium" type="text" placeholder="" v-model="config.username">
@@ -404,7 +404,7 @@
 
           <div class="field">
             <label class="label">
-              {{ 'settings.label.password'|trans }}
+              {{ $trans('settings.label.password') }}
             </label>
             <div class="control">
               <input class="input is-medium" type="password" placeholder="" v-model="config.password">
@@ -413,7 +413,7 @@
 
           <div class="field">
             <label class="label">
-              {{ 'settings.label.client_id'|trans }}
+              {{ $trans('settings.label.client_id') }}
             </label>
             <div class="control">
               <input class="input is-medium" type="text" placeholder="" v-model="config.clientId">
@@ -422,7 +422,7 @@
 
           <div class="field">
             <label class="label">
-              {{ 'settings.label.client_secret'|trans }}
+              {{ $trans('settings.label.client_secret') }}
             </label>
             <div class="control">
               <input class="input is-medium" type="password" placeholder="" v-model="config.clientSecret">
@@ -431,7 +431,7 @@
 
           <div class="field">
             <label class="label">
-              {{ 'settings.label.retries'|trans }}
+              {{ $trans('settings.label.retries') }}
             </label>
             <div class="control">
               <input class="input is-medium" type="text" placeholder="" v-model="config.retries">
@@ -443,7 +443,7 @@
           <div class="field is-grouped is-grouped-right">
             <div class="control">
               <button type="submit" class="button is-primary is-large">
-                {{ 'settings.btn.save'|trans }} &nbsp;
+                {{ $trans('settings.btn.save') }} &nbsp;
                 <span class="icon is-small">
                   <i class="fa fa-save"></i>
                 </span>
@@ -455,7 +455,7 @@
         <form @submit.prevent="save" v-if="tab==='services'">
           <div class="field">
             <label class="label">
-              {{ 'settings.label.unity'|trans }}
+              {{ $trans('settings.label.unity') }}
             </label>
             <div class="control">
               <div class="select is-fullwidth">
@@ -471,7 +471,7 @@
 
           <div class="field">
             <label class="label">
-              {{ 'settings.label.services'|trans }}
+              {{ $trans('settings.label.services') }}
             </label>
             <div class="control" v-for="service in services" :key="service.servico.id">
               <label class="checkbox">
@@ -480,7 +480,7 @@
               </label>
             </div>
             <div class="control" v-if="!services || !services.length">
-              {{ 'settings.services.empty'|trans }}
+              {{ $trans('settings.services.empty') }}
             </div>
           </div>
 
@@ -489,7 +489,7 @@
           <div class="field is-grouped is-grouped-right">
             <div class="control">
               <button type="submit" class="button is-primary is-large">
-                {{ 'settings.btn.save'|trans }} &nbsp;
+                {{ $trans('settings.btn.save') }} &nbsp;
                 <span class="icon is-small">
                   <i class="fa fa-save"></i>
                 </span>
@@ -501,7 +501,7 @@
         <form @submit.prevent="save" v-if="tab==='sound'">
           <div class="field">
             <label class="label">
-              {{ 'settings.label.alert'|trans }}
+              {{ $trans('settings.label.alert') }}
             </label>
             <div class="control has-addons">
               <div class="select">
@@ -522,7 +522,7 @@
             <div class="control has-addons">
               <label class="checkbox">
                 <input type="checkbox" v-model="config.speech">
-                {{ 'settings.label.speech_enabled'|trans }}
+                {{ $trans('settings.label.speech_enabled') }}
               </label>
               <a class="button" title="Play">
                 <span class="icon is-small" @click.prevent="testSpeech">
@@ -537,7 +537,7 @@
           <div class="field is-grouped is-grouped-right">
             <div class="control">
               <button type="submit" class="button is-primary is-large">
-                {{ 'settings.btn.save'|trans }} &nbsp;
+                {{ $trans('settings.btn.save') }} &nbsp;
                 <span class="icon is-small">
                   <i class="fa fa-save"></i>
                 </span>
@@ -584,7 +584,7 @@
           <div class="field is-grouped is-grouped-right">
             <div class="control">
               <button type="submit" class="button is-primary is-large">
-                {{ 'settings.btn.save'|trans }} &nbsp;
+                {{ $trans('settings.btn.save') }} &nbsp;
                 <span class="icon is-small">
                   <i class="fa fa-save"></i>
                 </span>
@@ -603,7 +603,7 @@
   import { log } from '@/util/functions'
 
   function load (ctx, isInit) {
-    const config = JSON.parse(JSON.stringify(ctx.$store.state.config))
+    const config = JSON.parse(JSON.stringify(ctx.$store.state.config || {}))
     // defaults
     config.locale = config.locale || 'en'
     config.retries = config.retries || 5
@@ -735,7 +735,7 @@
         if (!file) return
         const reader = new FileReader()
         reader.onload = (e) => {
-          this.$set(this.config, 'customLogo', e.target.result)
+          this.config.customLogo = e.target.result
         }
         reader.readAsDataURL(file)
       },
@@ -744,7 +744,7 @@
           this.$store
             .dispatch('fetchUnities')
             .then(() => {}, (error) => {
-              this.$swal('Oops!', error, 'error')
+              this.$swal('Oops!', error.message || error, 'error')
             })
           this.fetchUnities = false
         }
@@ -759,7 +759,7 @@
       },
       addYoutubeUrl () {
         if (!this.config.youtubeUrls) {
-          this.$set(this.config, 'youtubeUrls', [])
+          this.config.youtubeUrls = []
         }
         this.config.youtubeUrls.push({ url: '', id: null, isPlaylist: false })
       },
@@ -819,7 +819,7 @@
           this.$swal('Success', 'Configuration Ok', 'success')
           load(this, false)
         }, error => {
-          this.$swal('Oops!', error, 'error')
+          this.$swal('Oops!', error.message || error, 'error')
         })
       },
       testAlert () {
@@ -852,8 +852,12 @@
 <style lang="sass">
   aside
     img
-      width: 100%
+      display: block
+      margin: 0 auto
+      max-width: 100%
       max-height: 60px
+      height: auto
+      width: auto
   .columns .column
     padding: 2rem
 </style>

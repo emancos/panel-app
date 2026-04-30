@@ -8,6 +8,7 @@ const { spawn } = require('child_process')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const webpackHotMiddleware = require('webpack-hot-middleware')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
@@ -49,31 +50,44 @@ function startRenderer () {
     })
 
     compiler.hooks.compilation.tap('compilation', compilation => {
-      compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
+      HtmlWebpackPlugin.getHooks(compilation).afterEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
         hotMiddleware.publish({ action: 'reload' })
         cb()
       })
     })
 
+    let isResolved = false
     compiler.hooks.done.tap('done', stats => {
       logStats('Renderer', stats)
+      if (!isResolved) {
+        setTimeout(() => {
+          resolve()
+          isResolved = true
+        }, 500)
+      }
     })
 
     const server = new WebpackDevServer(
-      compiler,
       {
-        contentBase: path.join(__dirname, '../'),
-        quiet: true,
-        before (app, ctx) {
-          app.use(hotMiddleware)
-          ctx.middleware.waitUntilValid(() => {
-            resolve()
-          })
-        }
-      }
+        static: {
+          directory: path.join(__dirname, '../'),
+        },
+        port: 9080,
+        host: '0.0.0.0',
+        allowedHosts: 'all',
+        setupMiddlewares: (middlewares, devServer) => {
+          devServer.app.use(hotMiddleware)
+          return middlewares
+        },
+      },
+      compiler
     )
 
-    server.listen(9080)
+    server.start().then(() => {
+      // server started
+    })
+
+
   })
 }
 
@@ -116,6 +130,10 @@ function startMain () {
 function startElectron () {
   var args = [
     '--inspect=5858',
+    '--disable-dev-shm-usage',
+    '--no-sandbox',
+    '--ozone-platform-hint=auto',
+    '--disable-vulkan',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 

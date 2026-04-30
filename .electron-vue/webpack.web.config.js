@@ -9,25 +9,21 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 let webConfig = {
-  devtool: '#cheap-module-eval-source-map',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  devtool: 'eval-cheap-module-source-map',
   entry: {
     web: path.join(__dirname, '../src/renderer/main.js')
   },
   module: {
     rules: [
       {
-        test: /\.(js|vue)$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        }
+        test: /\.vue$/,
+        loader: 'vue-loader'
       },
+
       {
         test: /\.scss$/,
         use: ['vue-style-loader', 'css-loader', 'sass-loader']
@@ -40,8 +36,9 @@ let webConfig = {
           {
             loader: 'sass-loader',
             options: {
+              api: 'modern-compiler',
               sassOptions: {
-                indentedSyntax: true
+                syntax: 'indented'
               }
             }
           }
@@ -57,7 +54,7 @@ let webConfig = {
       },
       {
         test: /\.html$/,
-        use: 'vue-html-loader'
+        use: 'html-loader'
       },
       {
         test: /\.js$/,
@@ -65,54 +62,21 @@ let webConfig = {
         include: [ path.resolve(__dirname, '../src/renderer') ],
         exclude: /node_modules/
       },
+
       {
-        test: /\.vue$/,
-        use: {
-          loader: 'vue-loader',
-          options: {
-            extractCSS: true,
-            loaders: {
-              sass: [
-                'vue-style-loader',
-                'css-loader',
-                {
-                  loader: 'sass-loader',
-                  options: {
-                    sassOptions: {
-                      indentedSyntax: true
-                    }
-                  }
-                }
-              ],
-              scss: 'vue-style-loader!css-loader!sass-loader',
-              less: 'vue-style-loader!css-loader!less-loader'
-            }
-          }
-        }
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        use: {
-          loader: 'url-loader',
-          query: {
-            limit: 10000,
-            name: 'imgs/[name].[ext]'
-          }
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        use: {
-          loader: 'url-loader',
-          query: {
-            limit: 10000,
-            name: 'fonts/[name].[ext]'
-          }
+        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[name]--[hash][ext]'
         }
       }
     ]
   },
   plugins: [
+    new ESLintPlugin({
+      extensions: ['js', 'vue'],
+      formatter: require('eslint-friendly-formatter')
+    }),
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({filename: 'styles.css'}),
     new HtmlWebpackPlugin({
@@ -122,21 +86,26 @@ let webConfig = {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
         removeComments: true
-      },
-      nodeModules: false
+      }
     }),
     new webpack.DefinePlugin({
-      'process.env.IS_WEB': 'true'
+      'process.env.IS_WEB': 'true',
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/web/static'),
-        ignore: ['.*']
-      }
-    ])
+    new webpack.ProvidePlugin({
+      process: 'process/browser.js',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, '../static'),
+          to: path.join(__dirname, '../dist/web/static'),
+          globOptions: {
+            ignore: ['**/.*']
+          }
+        }
+      ]
+    })
   ],
   output: {
     filename: '[name].js',
@@ -145,18 +114,28 @@ let webConfig = {
   resolve: {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm-bundler.js'
     },
-    extensions: ['.js', '.vue', '.json', '.css']
+    extensions: ['.js', '.vue', '.json', '.css'],
+    fallback: {
+      process: require.resolve('process/browser.js'),
+    }
   },
-  target: 'web'
+  target: 'web',
+  devServer: {
+    static: {
+      directory: path.join(__dirname, '../dist/web'),
+    },
+    hot: true,
+    port: 9080,
+  }
 }
 
 /**
  * Adjust webConfig for production settings
  */
 if (process.env.NODE_ENV === 'production') {
-  webConfig.devtool = ''
+  webConfig.devtool = false
 
   webConfig.plugins.push(
 

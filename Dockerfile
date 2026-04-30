@@ -1,5 +1,5 @@
 # Estágio de Build
-FROM node:16-alpine AS build
+FROM node:lts-alpine AS build
 
 # Instalar dependências para compilação (necessário para alguns pacotes npm)
 RUN apk add --no-cache python3 make g++

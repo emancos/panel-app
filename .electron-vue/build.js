@@ -101,16 +101,25 @@ function pack (config) {
 function web () {
   del.sync(['dist/web/*', '!.gitkeep'])
   webConfig.mode = 'production'
-  webpack(webConfig, (err, stats) => {
-    if (err || stats.hasErrors()) console.log(err)
-
-    console.log(stats.toString({
-      chunks: false,
-      colors: true
-    }))
-
-    process.exit()
-  })
+  try {
+    webpack(webConfig, (err, stats) => {
+      if (err) {
+        console.error(err)
+        process.exit(1)
+      }
+      if (stats) {
+        console.log(stats.toString({
+          chunks: false,
+          colors: true
+        }))
+      }
+      process.exit()
+    })
+  } catch (err) {
+    require('fs').writeFileSync('webpack_error.log', err.toString())
+    console.error('Webpack error written to webpack_error.log')
+    process.exit(1)
+  }
 }
 
 function greeting () {

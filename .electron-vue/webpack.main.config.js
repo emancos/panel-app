@@ -5,9 +5,11 @@ process.env.BABEL_ENV = 'main'
 const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 
 let mainConfig = {
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: {
     main: path.join(__dirname, '../src/main/index.js')
   },
@@ -16,17 +18,7 @@ let mainConfig = {
   ],
   module: {
     rules: [
-      {
-        test: /\.(js)$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        }
-      },
+
       {
         test: /\.js$/,
         use: 'babel-loader',
@@ -34,21 +26,24 @@ let mainConfig = {
       },
       {
         test: /\.node$/,
-        use: 'node-loader'
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]'
+        }
       }
     ]
   },
-  node: {
-    __dirname: process.env.NODE_ENV !== 'production',
-    __filename: process.env.NODE_ENV !== 'production'
-  },
+
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, '../dist/electron')
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin()
+    new ESLintPlugin({
+      extensions: ['js'],
+      formatter: require('eslint-friendly-formatter')
+    })
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']

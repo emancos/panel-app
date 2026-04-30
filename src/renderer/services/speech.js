@@ -34,8 +34,7 @@ export default {
         resolve()
       }
 
-      // Cancelar qualquer fala anterior para evitar sobreposição
-      window.speechSynthesis.cancel()
+      // window.speechSynthesis.cancel() - Removido para permitir que a fila funcione
       window.speechSynthesis.speak(msg)
     })
   },

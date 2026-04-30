@@ -152,6 +152,10 @@
         if (this.$refs.youtubeIframe) {
           this.$refs.youtubeIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*')
         }
+        
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel()
+        }
 
         this.lastMessage = this.messageQueue.shift()
 

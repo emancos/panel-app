@@ -14,7 +14,9 @@ export default {
 
     const locale = config.locale || 'en'
 
-    state.dict = require(`../../../static/i18n/${locale}.json`)
+    console.log(`Loading dictionary for locale: ${locale}`)
+    const dict = require(`../../../static/i18n/${locale}.json`)
+    state.dict = dict.default || dict
   },
 
   updateApiInfo (state, apiInfo) {

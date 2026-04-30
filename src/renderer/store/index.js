@@ -1,34 +1,21 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import * as getters from './getters'
 import * as actions from './actions'
 import mutations from './mutations'
 import modules from './modules'
 
-Vue.use(Vuex)
-
 const state = {
   config: {},
   dict: {},
   apiInfo: {},
-  messages: [
-    /*
-    {
-      id,
-      type,
-      title
-    }
-    */
-  ]
+  messages: []
 }
 
-const store = new Vuex.Store({
+export default createStore({
   state,
   getters,
   actions,
   mutations,
   modules,
-  strict: process.env.NODE_ENV !== 'production'
+  strict: false
 })
-
-export default store

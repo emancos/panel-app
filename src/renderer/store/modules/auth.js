@@ -70,7 +70,7 @@ const actions = {
           throw new Error('No username and password')
         }
 
-        var params = new URLSearchParams()
+        const params = new URLSearchParams()
         params.append('grant_type', 'password')
         params.append('client_id', clientId)
         params.append('client_secret', clientSecret)
@@ -95,7 +95,7 @@ const actions = {
 
   refresh ({ state, commit, rootState }) {
     return new Promise((resolve, reject) => {
-      var params = new URLSearchParams()
+      const params = new URLSearchParams()
       params.append('grant_type', 'refresh_token')
       params.append('client_id', rootState.config.clientId)
       params.append('client_secret', rootState.config.clientSecret)

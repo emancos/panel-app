@@ -1,23 +1,23 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
-Vue.use(Router)
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import('@/pages/Home')
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@/pages/Settings')
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
+  }
+]
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: require('@/pages/Home').default
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: require('@/pages/Settings').default
-    },
-    {
-      path: '*',
-      redirect: '/'
-    }
-  ]
+export default createRouter({
+  history: createWebHashHistory(),
+  routes
 })

@@ -1,35 +1,43 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import axios from 'axios'
-import VueSwal from 'vue-swal'
-
-import App from './App'
+import App from './App.vue'
 import store from './store'
 import router from './router'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
-Vue.http = Vue.prototype.$http = axios
-Vue.config.productionTip = false
-
-Vue.use(VueSwal)
-
-Vue.filter('trans', (value) => {
-  return store.state.dict[value] || value
+console.log('Renderer process started')
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM Content Loaded')
 })
 
-/* eslint-disable no-new */
-new Vue({
-  components: { App },
-  router,
-  store,
-  template: '<App/>',
-  beforeCreate () {
-    this.$store.dispatch('loadConfig')
-  },
-  mounted () {
-    if (this.$electron) {
-      this.$electron.ipcRenderer.on('navigate', (e, routePath) => {
-        this.$router.push(routePath)
-      })
-    }
+const app = createApp(App)
+
+app.config.globalProperties.$http = axios
+
+app.use(store)
+app.use(router)
+app.use(VueSweetalert2)
+
+store.dispatch('loadConfig')
+
+app.config.globalProperties.$trans = (value) => {
+  const dict = store.state.dict || {}
+  if (dict[value]) {
+    return dict[value]
   }
-}).$mount('#app')
+  return value
+}
+
+// Global mixin for electron (replacing vue-electron)
+app.config.globalProperties.$electron = window.require ? window.require('electron') : null
+
+app.config.errorHandler = (err, vm, info) => {
+  console.error('Vue Error:', err, info)
+}
+
+window.onerror = function (message, source, lineno, colno, error) {
+  console.error('Window Error:', message, error)
+}
+
+app.mount('#app')

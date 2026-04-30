@@ -1,6 +1,6 @@
 
 export const theme = state => {
-  return 'Default'
+  return 'novosga.default'
 }
 
 export const message = state => {

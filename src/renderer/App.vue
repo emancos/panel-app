@@ -6,7 +6,10 @@
 
 <script>
   export default {
-    name: 'painel-web'
+    name: 'painel-web',
+    mounted () {
+      console.log('App component mounted')
+    }
   }
 </script>
 

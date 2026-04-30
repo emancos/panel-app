@@ -2,7 +2,7 @@
   <transition-group name="history-list" tag="div" class="history">
     <div v-if="messages.length===0" class="empty" key="empty">
       <p :style="{ 'color': fontColorNormal }">
-        {{ 'history.empty'|trans }}
+        {{ $trans('history.empty') }}
       </p>
     </div>
     <div v-for="message in messages" class="message" :key="message.id">

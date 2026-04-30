@@ -5,7 +5,7 @@
         <span class="icon">
           <i class="fa fa-cog"></i>
         </span>
-        {{ 'menu.settings'|trans }}
+        {{ $trans('menu.settings') }}
       </router-link>
     </div>
 

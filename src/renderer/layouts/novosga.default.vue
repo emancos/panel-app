@@ -82,13 +82,14 @@
         const mute = vol === 0 ? 1 : 0
         const controls = this.config.youtubeControls ? 1 : 0
 
-        let url = `https://www.youtube-nocookie.com/embed/`
+        let url = `https://www.youtube.com/embed/`
         if (isList) {
           url += `videoseries?list=${first.id}`
         } else {
           url += `${first.id}?rel=0`
         }
-        url += `&enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1&origin=http://127.0.0.1:9080`
+        const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : 'http://localhost:9080'
+        url += `&enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1&origin=${origin}`
 
         if (!isList) {
           const others = validUrls.slice(1).map(u => u.id).filter(id => !id.startsWith('PL'))
@@ -117,12 +118,30 @@
       },
       applyYoutubeVolume () {
         if (!this.$refs.youtubeIframe) return
-        const vol = this.config.youtubeVolume !== undefined ? this.config.youtubeVolume : 0
+        // Garante que o volume seja um número entre 0 e 100
+        let vol = parseInt(this.config.youtubeVolume)
+        if (isNaN(vol)) {
+          vol = (this.config.youtubeVolume !== undefined) ? parseInt(this.config.youtubeVolume) : 0
+        }
+        if (isNaN(vol)) vol = 0
+        
+        const iframe = this.$refs.youtubeIframe.contentWindow
+        const targetOrigin = 'https://www.youtube.com'
+        
         if (vol > 0) {
-          this.$refs.youtubeIframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*')
-          this.$refs.youtubeIframe.contentWindow.postMessage(`{"event":"command","func":"setVolume","args":[${vol}]}`, '*')
+          console.log(`Aplicando volume do YouTube: ${vol}%`)
+          // Envia comandos de volume e desmuda
+          iframe.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [vol] }), targetOrigin)
+          iframe.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), targetOrigin)
+          
+          // Reforço em 100ms
+          setTimeout(() => {
+            iframe.postMessage(JSON.stringify({ event: 'command', func: 'setVolume', args: [vol] }), targetOrigin)
+            iframe.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), targetOrigin)
+          }, 100)
         } else {
-          this.$refs.youtubeIframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*')
+          console.log('Mutando YouTube (volume 0)')
+          iframe.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), targetOrigin)
         }
       },
       onIframeLoad () {
@@ -138,20 +157,35 @@
       },
       resumeVideo () {
         this.showingVideo = true
-        if (this.$refs.youtubeIframe) {
-          this.$refs.youtubeIframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*')
-          this.applyYoutubeVolume()
-        }
+        this.$nextTick(() => {
+          if (this.$refs.youtubeIframe) {
+            console.log('Enviando comando playVideo para o YouTube')
+            const targetOrigin = 'https://www.youtube.com'
+            this.$refs.youtubeIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), targetOrigin)
+            
+            // Pequeno delay para garantir que o player processe o play antes de aplicar o volume
+            setTimeout(() => {
+              this.applyYoutubeVolume()
+            }, 500)
+
+            // Reforço adicional após 2 segundos para garantir a restauração do volume
+            setTimeout(() => {
+              this.applyYoutubeVolume()
+            }, 2000)
+          }
+        })
       },
       playAudio () {
         if (this.isCalling || this.messageQueue.length === 0) {
           return
         }
         this.isCalling = true
-        this.showingVideo = false
         if (this.$refs.youtubeIframe) {
-          this.$refs.youtubeIframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*')
+          console.log('Enviando comando pauseVideo para o YouTube')
+          const targetOrigin = 'https://www.youtube.com'
+          this.$refs.youtubeIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), targetOrigin)
         }
+        this.showingVideo = false
         
         if (window.speechSynthesis) {
           window.speechSynthesis.cancel()

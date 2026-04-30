@@ -25,11 +25,6 @@ export default {
 
   newMessage (state, message) {
     if (state.messages.length) {
-      const last = state.messages[0]
-      if (last.id === message.id) {
-        return
-      }
-
       // prevent multiple messages of same type+title
       for (let i = 0; i < state.messages.length; i++) {
         let m = state.messages[i]

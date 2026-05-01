@@ -40,9 +40,16 @@ npm install
 ```
 
 3. Configure o servidor de voz Piper:
+
+**Linux / macOS:**
 ```bash
 chmod +x piper-server/install.sh
 ./piper-server/install.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+.\piper-server\install.ps1
 ```
 
 ### Modos de Execução

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Painel Web (Frontend Nginx)
+  panel:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: novosga-panel
+    ports:
+      - "8080:80"
+    restart: always
+    depends_on:
+      - tts
+
+  # Servidor de Voz Piper TTS
+  tts:
+    build: 
+      context: ./piper-server
+      dockerfile: Dockerfile
+    container_name: novosga-tts
+    environment:
+      - PIPER_PORT=5500
+    ports:
+      - "5500:5500"
+    restart: always
+
+# Como usar:
+# docker-compose up -d --build

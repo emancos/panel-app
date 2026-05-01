@@ -71,6 +71,26 @@ npm run build
 
 ---
 
+## 🐳 Docker & Compose
+
+Para rodar o ecossistema completo (Painel + Voz Piper) de forma rápida:
+
+```bash
+# Iniciar todos os serviços
+docker-compose up -d --build
+```
+
+-   **Painel Web**: `http://localhost:8080`
+-   **Servidor Piper**: `http://localhost:5500/health`
+
+Para rodar apenas o painel via Docker simples:
+```bash
+docker build -t novosga-painel .
+docker run -d -p 8080:80 --name painel-web novosga-painel
+```
+
+---
+
 ## ⚙️ Configurações Importantes
 
 ### Piper TTS (Voz de Alta Qualidade)

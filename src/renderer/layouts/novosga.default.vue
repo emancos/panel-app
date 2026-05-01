@@ -89,7 +89,8 @@
         } else {
           url += `${first.id}?rel=0`
         }
-        const origin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : 'http://localhost:9080'
+        const isFileProtocol = !window.location.origin || window.location.origin === 'null' || window.location.origin.startsWith('file')
+        const origin = isFileProtocol ? 'https://www.youtube.com' : window.location.origin
         url += `&enablejsapi=1&autoplay=1&mute=${mute}&controls=${controls}&loop=1&origin=${origin}`
 
         if (!isList) {
@@ -183,8 +184,19 @@
         this.isCalling = true
         if (this.$refs.youtubeIframe) {
           console.log('Enviando comando pauseVideo para o YouTube')
-          const targetOrigin = 'https://www.youtube.com'
-          this.$refs.youtubeIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), targetOrigin)
+          const targetOrigin = '*' // Usar * para garantir entrega em ambiente Electron/File
+          const iframe = this.$refs.youtubeIframe.contentWindow
+          
+          // Envia comandos de pausa e mute para garantir silêncio total
+          iframe.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), targetOrigin)
+          iframe.postMessage(JSON.stringify({ event: 'command', func: 'mute', args: [] }), targetOrigin)
+          
+          // Repete após um pequeno delay para garantir que o player processe
+          setTimeout(() => {
+            if (this.$refs.youtubeIframe) {
+              this.$refs.youtubeIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), targetOrigin)
+            }
+          }, 200)
         }
         this.showingVideo = false
         
@@ -248,6 +260,19 @@
       }
     },
     watch: {
+      config: {
+        immediate: true,
+        deep: true,
+        handler (newConfig) {
+          if (!newConfig) return
+          speech.configure({
+            endpoint: newConfig.piperEndpoint || 'http://localhost:5500/tts',
+            engine: newConfig.speechEngine || 'native',
+            lengthScale: newConfig.piperLengthScale,
+            noiseScale: newConfig.piperNoiseScale
+          })
+        }
+      },
       message () {
         this.call()
       }

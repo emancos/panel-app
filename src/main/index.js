@@ -34,7 +34,8 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      webSecurity: false
+      webSecurity: false,
+      allowRunningInsecureContent: true
     }
   })
 
@@ -96,10 +97,12 @@ app.on('ready', () => {
   const filter = {
     urls: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*']
   }
-  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, next) => {
-    details.requestHeaders['Referer'] = 'https://www.youtube.com/'
-    details.requestHeaders['Origin'] = 'https://www.youtube.com/'
-    next({ cancel: false, requestHeaders: details.requestHeaders })
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    const headers = Object.assign({}, details.requestHeaders, {
+      'Referer': 'https://www.youtube.com/',
+      'Origin': 'https://www.youtube.com/'
+    })
+    callback({ requestHeaders: headers })
   })
   createWindow()
 })

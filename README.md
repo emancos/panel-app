@@ -13,7 +13,7 @@ Uma versão modernizada, elegante e robusta do Painel Web para o ecossistema **N
 
 *   **🎨 Layout Híbrido & Moderno**: Interface redesenhada com tipografia *Outfit*, efeitos de *glassmorphism* e animações suaves.
 *   **📺 Integração com YouTube**: Suporte nativo para vídeos individuais ou playlists completas como plano de fundo.
-*   **🎙️ Vocalização Avançada (TTS)**: Integração com a API do Google Translate para chamadas de senha claras e confiáveis, com fallback para voz nativa do sistema.
+*   **🎙️ Vocalização Avançada (TTS)**: Suporte ao **Piper TTS** para vozes naturais de alta fidelidade processadas localmente (offline), com fallback automático para a Web Speech API.
 *   **🖼️ Logo Personalizada**: Upload direto via painel de configurações com persistência local (Base64).
 *   **🔊 Controle de Áudio Inteligente**: Gestão de volume exclusiva para o vídeo, com pausa automática durante a chamada de senhas.
 *   **🐳 Docker Ready**: Dockerfile otimizado para implantação rápida via Nginx.
@@ -81,7 +81,7 @@ Acesse em: `http://localhost:8080`
 Se o player do YouTube exibir "Erro de configuração" ou "Assistir no YouTube", certifique-se de que o aplicativo foi compilado com as correções de **Spoofing de Headers** presentes nesta versão, que permitem o funcionamento do embed sob o protocolo `file://`.
 
 ### Vocalização
-Para que a voz funcione, o painel precisa de acesso à internet (para o Google TTS). Caso esteja offline, ele tentará usar as vozes instaladas no sistema operacional.
+Esta versão suporta o motor **Piper TTS**, que permite vocalização de alta qualidade sem internet. O servidor Piper deve estar rodando localmente (veja a pasta `piper-server/`). Caso o Piper não esteja disponível ou ocorra um erro, o painel alterna silenciosamente para a voz nativa do navegador.
 
 ---
 
@@ -92,7 +92,7 @@ Para que a voz funcione, o painel precisa de acesso à internet (para o Google T
 *   **Electron** - Distribuição desktop
 *   **Bulma** - Framework CSS
 *   **Sass** - Pré-processador CSS
-*   **Google Translate API** - Engine de TTS
+*   **Piper TTS** - Engine de vocalização natural local
 
 ---
 

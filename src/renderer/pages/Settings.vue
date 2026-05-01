@@ -532,6 +532,61 @@
             </div>
           </div>
 
+          <div class="field" v-if="config.speech">
+            <label class="label">Motor de Voz</label>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" value="native" v-model="config.speechEngine">
+                Voz do Sistema (Web Speech API)
+              </label>
+              &nbsp;&nbsp;
+              <label class="radio">
+                <input type="radio" value="piper" v-model="config.speechEngine">
+                Piper TTS (Alta Qualidade)
+              </label>
+            </div>
+          </div>
+
+          <div class="field" v-if="config.speech && config.speechEngine === 'piper'">
+            <label class="label">Endereço do Servidor Piper</label>
+            <div class="control has-addons">
+              <div class="control is-expanded">
+                <input class="input" type="url" v-model="config.piperEndpoint" placeholder="http://localhost:5500/tts">
+              </div>
+              <div class="control">
+                <button type="button" class="button is-info" @click="testPiperConnection">
+                  <span class="icon is-small"><i class="fa fa-plug"></i></span>
+                  <span>Testar</span>
+                </button>
+              </div>
+            </div>
+            <p class="help is-success" v-if="piperStatus === 'ok'">
+              <span class="icon is-small"><i class="fa fa-check-circle"></i></span>
+              Servidor Piper conectado!
+            </p>
+            <p class="help is-danger" v-if="piperStatus === 'error'">
+              <span class="icon is-small"><i class="fa fa-times-circle"></i></span>
+              Servidor Piper não encontrado. Verifique se está rodando.
+            </p>
+
+            <div class="columns" style="margin-top: 1rem">
+              <div class="column">
+                <label class="label">Velocidade da Fala ({{ config.piperLengthScale }})</label>
+                <div class="control">
+                  <input class="slider is-fullwidth" type="range" min="0.5" max="2.0" step="0.1" v-model.number="config.piperLengthScale">
+                </div>
+                <p class="help">Menor é mais rápido. Padrão: 1.0</p>
+              </div>
+              <div class="column">
+                <label class="label">Entonação / Ruído ({{ config.piperNoiseScale }})</label>
+                <div class="control">
+                  <input class="slider is-fullwidth" type="range" min="0" max="2.0" step="0.1" v-model.number="config.piperNoiseScale">
+                </div>
+                <p class="help">Maior é mais expressivo. Padrão: 0.67</p>
+              </div>
+            </div>
+          </div>
+
           <hr>
 
           <div class="field is-grouped is-grouped-right">
@@ -613,6 +668,10 @@
     config.services = config.services || []
     config.alert = config.alert || audio.alertsAvailable.Default
     config.speech = !!config.speech
+    config.speechEngine = config.speechEngine || 'native'
+    config.piperEndpoint = config.piperEndpoint || 'http://localhost:5500/tts'
+    config.piperLengthScale = config.piperLengthScale || 1.0
+    config.piperNoiseScale = config.piperNoiseScale || 0.667
 
     config.pageBgColorNormal = config.pageBgColorNormal || '#FFFFFF'
     config.pageFontColorNormal = config.pageFontColorNormal || '#000000'
@@ -684,6 +743,7 @@
     data () {
       return {
         tab: 'interface',
+        piperStatus: null,
         config: {},
         initialClientId: null,
         initialClientSecret: null,
@@ -830,6 +890,14 @@
       testSpeech () {
         const lang = this.config.locale || 'pt-BR'
         log('Testing speech lang', lang)
+        
+        // Configura o serviço com os valores atuais da tela (mesmo sem salvar)
+        speech.configure({
+          endpoint: this.config.piperEndpoint,
+          engine: this.config.speechEngine,
+          lengthScale: this.config.piperLengthScale,
+          noiseScale: this.config.piperNoiseScale
+        })
 
         speech.speechAll([
           'Senha',
@@ -841,6 +909,18 @@
         }, (e) => {
           log('Testing error', e)
         })
+      },
+      async testPiperConnection () {
+        this.piperStatus = null
+        // Configura o serviço com os valores atuais da tela (mesmo sem salvar)
+        speech.configure({
+          endpoint: this.config.piperEndpoint,
+          engine: this.config.speechEngine,
+          lengthScale: this.config.piperLengthScale,
+          noiseScale: this.config.piperNoiseScale
+        })
+        const available = await speech.checkPiperAvailable()
+        this.piperStatus = available ? 'ok' : 'error'
       }
     },
     beforeMount () {

@@ -2,16 +2,17 @@
   <div class="novosga-default layout-content" :style="{ 'background-color': color('pageBgColor'), 'color': color('pageFontColor') }">
     <div class="columns is-gapless">
       <div class="column is-multiline featured-column" :class="{ 'is-hybrid': isHybrid }">
-        <div class="video-container" v-show="isHybrid" style="width: 100%;">
-          <iframe ref="youtubeIframe" :src="youtubeUrl" @load="onIframeLoad" frameborder="0" allow="autoplay; encrypted-media" style="width: 100%; height: 100%;"></iframe>
+        <div class="video-container" v-show="isHybrid">
+          <iframe ref="youtubeIframe" :src="youtubeUrl" @load="onIframeLoad" frameborder="0" allow="autoplay; encrypted-media"></iframe>
         </div>
 
-        <header class="column ticket-header" v-show="!hasVideo || !showingVideo || isHybrid">
+        <header class="ticket-header" v-show="!hasVideo || !showingVideo || isHybrid">
           <featured :message="lastMessage" v-if="lastMessage" :fontColor="color('featuredFontColor', 'pageFontColor')"></featured>
         </header>
-        <footer class="column ticket-footer" :style="{ 'background-color': color('footerBgColor'), 'color': color('footerFontColor') }" v-show="!isHybrid">
-          <img :src="logoUrl" class="is-pulled-left">
-          <h1 class="is-pulled-left" v-if="config.themeOptions && config.themeOptions.footerText" :style="{ 'color': color('footerFontColor') }">
+
+        <footer class="ticket-footer" :style="{ 'background-color': color('footerBgColor'), 'color': color('footerFontColor') }">
+          <img :src="logoUrl" class="logo">
+          <h1 class="footer-text" v-if="config.themeOptions && config.themeOptions.footerText" :style="{ 'color': color('footerFontColor') }">
             {{ config.themeOptions.footerText }}
           </h1>
         </footer>
@@ -259,100 +260,110 @@
 
   .novosga-default
     font-family: 'Outfit', sans-serif
-    .layout-content
-      position: fixed
-      width: 100%
-      height: 100%
-      .columns
-        height: 100%
+    position: fixed
+    width: 100%
+    height: 100%
+    overflow: hidden
 
-    .clock
-      .time
-        span
-          font-size: 4vw
-        span.hours
-          font-weight: bold
-        span.seconds
-          font-style: italic
-          opacity: 0.8
-      .date
-        text-align: center
-        span
-          font-size: 2vw
-          font-weight: bold
+    .columns
+      height: 100%
+      margin: 0
 
     .featured-column
-        >header
-          height: 80vh
-          display: flex
-          align-items: center
-          justify-content: center
-          transition: height 0.4s ease
-        >footer
-          height: 20vh
-          padding: 5vh
-          background: rgba(0,0,0,0.05)
-          backdrop-filter: blur(10px)
-          img
-            height: 10vh
-          h1
-            font-size: 5vh
-            padding: 2vh 0 0 5vh
-            font-weight: 700
-        .featured-message
-          text-align: center
-          transition: all 0.4s ease
-          .title
-            font-size: 30vh
-            font-weight: 900
-            line-height: 1
-            text-shadow: 0 10px 30px rgba(0,0,0,0.15)
-            margin-bottom: 2vh
-            transition: font-size 0.4s ease
-          .subtitle
-            font-size: 10vh
-            font-weight: 700
-            text-shadow: 0 5px 15px rgba(0,0,0,0.1)
-            transition: font-size 0.4s ease
-          .description
-            font-size: 8vh
-            opacity: 0.9
-            text-transform: uppercase
-            letter-spacing: 2px
-            text-shadow: 0 5px 15px rgba(0,0,0,0.1)
-            transition: font-size 0.4s ease
-
-    .featured-column.is-hybrid
-      >header
-        height: 35vh
+      height: 100vh
+      display: flex
+      flex-direction: column
+      
       .video-container
-        height: 65vh
-      .featured-message
-        .title
-          font-size: 14vh
-          margin-bottom: 0
-        .subtitle
-          font-size: 6vh
-        .description
-          font-size: 4vh
+        height: 55vh
+        width: 100%
+        background: #000
+        iframe
+          width: 100%
+          height: 100%
+
+      .ticket-header
+        height: 30vh
+        display: flex
+        align-items: center
+        justify-content: center
+        transition: all 0.4s ease
+        overflow: hidden
+
+      .ticket-footer
+        height: 15vh
+        min-height: 15vh
+        max-height: 15vh
+        flex-shrink: 0
+        padding: 2vh 4vh
+        display: flex
+        align-items: center
+        background: rgba(0,0,0,0.05)
+        backdrop-filter: blur(10px)
+        overflow: hidden
+        
+        .logo
+          height: 8vh
+          margin-right: 4vh
+
+        .footer-text
+          font-size: 4.5vh
+          font-weight: 700
+
+      &:not(.is-hybrid)
+        .ticket-header
+          height: 85vh
+          .featured-message
+            .title
+              font-size: 30vh
+            .subtitle
+              font-size: 10vh
+            .description
+              font-size: 8vh
+
+    .featured-message
+      text-align: center
+      .title
+        font-size: 14vh
+        font-weight: 900
+        line-height: 1
+        text-shadow: 0 10px 30px rgba(0,0,0,0.15)
+        margin-bottom: 2vh
+      .subtitle
+        font-size: 6vh
+        font-weight: 700
+      .description
+        font-size: 4vh
+        opacity: 0.9
+        text-transform: uppercase
+        letter-spacing: 2px
 
     .history-column
       height: 100vh
       box-shadow: -10px 0 40px rgba(0,0,0,0.15)
-      position: relative
       z-index: 10
+      display: flex
+      flex-direction: column
+      
       >header
-        height: 80vh
+        height: 85vh
         padding: 2rem
         overflow: hidden
+        flex: 1
       >footer
-        height: 20vh
+        height: 15vh
+        min-height: 15vh
+        max-height: 15vh
+        flex-shrink: 0
         padding: 1rem 0
         text-align: center
         background: rgba(0,0,0,.15)
         backdrop-filter: blur(10px)
-      *
-        color: inherit
+        display: flex
+        align-items: center
+        justify-content: center
+        overflow: hidden
+      
       .title
         text-align: center
         font-weight: 900
@@ -361,45 +372,87 @@
         margin-bottom: 2rem
         font-size: 1.5rem
         opacity: 0.9
-      .empty
-        p
+
+    .clock
+      padding-top: 1vh
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+
+      .date
+        line-height: 1
+        margin-bottom: 0.2vh
+        span
+          font-size: 1.8vw
+          font-weight: bold
+          opacity: 0.8
+
+      .time
+        line-height: 1
+        span
+          font-size: 4.2vw
+        span.hours
+          font-weight: bold
+        span.seconds
+          font-size: 2.5vw
           font-style: italic
-          text-align: center
+          opacity: 0.7
+          margin-left: 0.5vw
+
+    .history
+      padding: 1vh
+      .message
+        position: relative
+        background: rgba(255, 255, 255, 0.05)
+        backdrop-filter: blur(12px)
+        border-radius: 16px
+        border: 1px solid rgba(255, 255, 255, 0.1)
+        padding: 2vh
+        margin-bottom: 2vh
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1)
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)
+        overflow: hidden
+
+        // Borda de destaque (accent)
+        &:before
+          content: ''
+          position: absolute
+          left: 0
+          top: 0
+          bottom: 0
+          width: 6px
+          background: rgba(255,255,255,0.3)
+          transition: width 0.3s ease
+
+        &:hover
+          transform: translateX(5px)
+          background: rgba(255, 255, 255, 0.08)
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15)
+          &:before
+            width: 10px
+
+        span
+          display: block
+          line-height: 1.2
+
+        .title
+          font-size: 5vh
+          font-weight: 900
+          margin-bottom: 0.5vh
+          letter-spacing: -1px
+          text-shadow: 0 2px 10px rgba(0,0,0,0.1)
+        
+        .subtitle
+          font-size: 2.2vh
+          font-weight: 700
+          opacity: 0.9
+          margin-bottom: 0.5vh
+        
+        .description
+          font-size: 1.8vh
+          font-weight: 400
+          text-transform: uppercase
+          letter-spacing: 1px
           opacity: 0.6
-      .history
-        .history-list-enter-active, .history-list-leave-active
-          transition: all 0.5s ease
-        .history-list-enter, .history-list-leave-to
-          opacity: 0
-          transform: translateY(-30px) scale(0.95)
-        .message
-          background-color: rgba(255, 255, 255, 0.12)
-          backdrop-filter: blur(15px)
-          border-radius: 20px
-          border: 1px solid rgba(255, 255, 255, 0.2)
-          box-shadow: 0 8px 32px rgba(0,0,0,0.08)
-          padding: 1.5rem
-          margin-bottom: 1.5rem
-          transition: transform 0.3s ease, box-shadow 0.3s ease
-          span
-            text-align: left
-            display: block
-          .title
-            font-size: 5vh
-            font-weight: 900
-            line-height: 1.1
-            margin-bottom: 0.5rem
-            text-shadow: 0 2px 5px rgba(0,0,0,0.1)
-            letter-spacing: 0
-            text-transform: none
-          .subtitle
-            font-size: 2.5vh
-            font-weight: 700
-            opacity: 0.9
-          .description
-            font-size: 2vh
-            opacity: 0.7
-            margin-top: 0.5rem
-            text-transform: uppercase
-            letter-spacing: 1px
 </style>

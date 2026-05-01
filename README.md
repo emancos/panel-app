@@ -2,21 +2,20 @@
 
 ![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Electron](https://img.shields.io/badge/Electron-7.2.4-47848F.svg)
-![Vue](https://img.shields.io/badge/Vue-2.7-4FC08D.svg)
+![Electron](https://img.shields.io/badge/Electron-41.3-47848F.svg)
+![Vue](https://img.shields.io/badge/Vue-3.5-4FC08D.svg)
 
-Uma versão modernizada, elegante e robusta do Painel Web para o ecossistema **Novo SGA**. Esta versão foi otimizada para oferecer uma experiência visual premium, suporte a conteúdos multimídia e alta compatibilidade em ambientes Linux e Docker.
+Uma versão modernizada, elegante e robusta do Painel Web para o ecossistema **Novo SGA**. Esta versão foi otimizada para oferecer uma experiência visual premium, suporte a conteúdos multimídia e alta compatibilidade em ambientes modernos.
 
 ---
 
 ## ✨ Principais Funcionalidades
 
 *   **🎨 Layout Híbrido & Moderno**: Interface redesenhada com tipografia *Outfit*, efeitos de *glassmorphism* e animações suaves.
-*   **📺 Integração com YouTube**: Suporte nativo para vídeos individuais ou playlists completas como plano de fundo.
-*   **🎙️ Vocalização Avançada (TTS)**: Suporte ao **Piper TTS** para vozes naturais de alta fidelidade processadas localmente (offline), com fallback automático para a Web Speech API.
+*   **📺 Integração com YouTube**: Suporte nativo para vídeos individuais ou playlists completas como plano de fundo, com correções para ambiente de produção.
+*   **🎙️ Vocalização Natural (Piper TTS)**: Integração com o motor Piper para chamadas de senha com vozes naturais locais (offline), incluindo controle de velocidade e entonação. Fallback automático para a Web Speech API.
 *   **🖼️ Logo Personalizada**: Upload direto via painel de configurações com persistência local (Base64).
-*   **🔊 Controle de Áudio Inteligente**: Gestão de volume exclusiva para o vídeo, com pausa automática durante a chamada de senhas.
-*   **🐳 Docker Ready**: Dockerfile otimizado para implantação rápida via Nginx.
+*   **🔊 Controle de Áudio Inteligente**: Gestão de volume exclusiva para o vídeo, com pausa e mute automáticos durante a chamada de senhas.
 *   **🐧 Linux Optimized**: Correções integradas para drivers de vídeo e sandbox no Electron em distros modernas (Ubuntu 22+, Debian, etc).
 
 ---
@@ -24,22 +23,34 @@ Uma versão modernizada, elegante e robusta do Painel Web para o ecossistema **N
 ## 🚀 Como Começar
 
 ### Pré-requisitos
-*   Node.js (recomendado v12 ou v16 para compatibilidade de build)
-*   npm
+*   Node.js (v20 ou superior)
+*   Python 3 (para o servidor Piper TTS)
 
 ### Instalação
+
+1. Clone o repositório:
 ```bash
-# Clone o repositório
 git clone https://github.com/emancos/panel-app.git
-
-# Entre na pasta
 cd panel-app
+```
 
-# Instale as dependências
+2. Instale as dependências do painel:
+```bash
 npm install
 ```
 
+3. Configure o servidor de voz Piper:
+```bash
+chmod +x piper-server/install.sh
+./piper-server/install.sh
+```
+
 ### Modos de Execução
+
+#### 🎙️ Servidor de Voz (Necessário para Piper TTS)
+```bash
+python3 piper-server/server.py
+```
 
 #### 🛠️ Desenvolvimento
 ```bash
@@ -60,39 +71,24 @@ npm run build
 
 ---
 
-## 🐳 Docker
-
-Para rodar o painel de forma rápida e isolada usando Docker:
-
-```bash
-# Construir a imagem
-docker build -t novosga-painel .
-
-# Rodar o container na porta 8080
-docker run -d -p 8080:80 --name painel-web novosga-painel
-```
-Acesse em: `http://localhost:8080`
-
----
-
 ## ⚙️ Configurações Importantes
 
-### YouTube no Electron
-Se o player do YouTube exibir "Erro de configuração" ou "Assistir no YouTube", certifique-se de que o aplicativo foi compilado com as correções de **Spoofing de Headers** presentes nesta versão, que permitem o funcionamento do embed sob o protocolo `file://`.
+### Piper TTS (Voz de Alta Qualidade)
+Para usar vozes naturais, ative o Piper TTS em **Configurações > Som**. Você pode ajustar a velocidade e a expressividade da voz diretamente na interface. Certifique-se de que o `server.py` está rodando.
 
-### Vocalização
-Esta versão suporta o motor **Piper TTS**, que permite vocalização de alta qualidade sem internet. O servidor Piper deve estar rodando localmente (veja a pasta `piper-server/`). Caso o Piper não esteja disponível ou ocorra um erro, o painel alterna silenciosamente para a voz nativa do navegador.
+### YouTube no Electron
+Esta versão inclui correções automáticas de headers e políticas de segurança para garantir que o embed do YouTube funcione perfeitamente tanto em modo desenvolvimento quanto em produção (`file://`).
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-*   **Vue.js 2.7** - Framework principal
-*   **Vuex** - Gestão de estado
-*   **Electron** - Distribuição desktop
-*   **Bulma** - Framework CSS
+*   **Vue.js 3.5** - Framework principal
+*   **Vuex 4** - Gestão de estado
+*   **Electron 41** - Distribuição desktop
+*   **Bulma 1.0** - Framework CSS
 *   **Sass** - Pré-processador CSS
-*   **Piper TTS** - Engine de vocalização natural local
+*   **Piper TTS** - Engine de voz natural local
 
 ---
 
